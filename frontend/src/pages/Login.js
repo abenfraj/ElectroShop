@@ -53,13 +53,9 @@ const Login = () => {
         height: "80vh",
       }}
     >
-      <div className="ocean">
-        <div className="wave"></div>
-        <div className="wave"></div>
-      </div>
       <section>
         <div className="container" id="container">
-          <div className="form-container sign-in-container">
+          <div className="form-container login-sign-in-container">
             <form action="#">
               <h1>Connectez-vous !</h1>
               <br />
@@ -82,7 +78,7 @@ const Login = () => {
               </label>
               <a href="#">Mot de passe oublié ?</a>
               {!isPending && (
-                <button onClick={handleSubmit}>Se connecter</button>
+                <button onClick={handleSubmit}>Valider</button>
               )}
               {isPending && <button disabled>Connexion...</button>}
               {error && (

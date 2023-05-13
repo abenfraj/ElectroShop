@@ -36,12 +36,13 @@ const signIn = (req, res, connection) => {
  */
 const signUp = (req, res, connection) => {
   const id = uuidv4();
-  const { firstName, lastName, email, password, phoneNumber } = req.body;
+  const { firstName, lastName, email, password } = req.body;
   const sql =
-    "INSERT INTO user (idUser, firstNameUser, lastNameUser, emailUser, passwordUser, phoneNumberUser) VALUES (?, ?, ?, ?, aes_encrypt(?, ?), ?)";
-  const values = [id, firstName, lastName, email, password, process.env.ENCRYPTION_KEY, phoneNumber];
+    "INSERT INTO user (idUser, firstNameUser, lastNameUser, emailUser, passwordUser) VALUES (?, ?, ?, ?, aes_encrypt(?, ?))";
+  const values = [id, firstName, lastName, email, password, process.env.ENCRYPTION_KEY];
   connection.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(500).json({ message: "Erreur lors de l'inscription" });
     } else {
       res.status(200).json({ message: "Inscription réussie" });
@@ -49,7 +50,50 @@ const signUp = (req, res, connection) => {
   });
 };
 
+/**
+ * Deletes a user from the database
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Object} connection 
+ */
+const deleteUser = (req, res, connection) => {
+  const { id } = req.body;
+  const sql = "DELETE FROM user WHERE idUser = ?";
+  const values = [id];
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ message: "Erreur lors de la suppression" });
+    } else {
+      res.status(200).json({ message: "Suppression réussie" });
+    }
+  });
+};
+
+/**
+ * Updates a user in the database
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} connection
+ * @returns {Object} - The result of the query
+ */
+const updateUser = (req, res, connection) => {
+  const { id, firstName, lastName, email, password } = req.body;
+  const sql = "UPDATE user SET firstNameUser = ?, lastNameUser = ?, emailUser = ?, passwordUser = aes_encrypt(?, ?) WHERE idUser = ?";
+  const values = [firstName, lastName, email, password, process.env.ENCRYPTION_KEY, id];
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ message: "Erreur lors de la mise à jour" });
+    } else {
+      res.status(200).json({ message: "Mise à jour réussie" });
+    }
+  });
+};
+
 module.exports = {
   signIn,
   signUp,
+  deleteUser,
+  updateUser,
 };
