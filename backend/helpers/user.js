@@ -47,7 +47,7 @@ const signUp = (req, res, connection) => {
       res.status(500).json({ message: "Erreur lors de l'inscription" });
     } else {
       const token = generateAccessToken({ result });
-      res.status(200).json({ message: "Inscription réussie" });
+      res.status(200).json(token);
     }
   });
 };

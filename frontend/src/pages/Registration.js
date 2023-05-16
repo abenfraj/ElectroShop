@@ -12,18 +12,20 @@ const Registration = () => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
 
-  const getUserInfo = () => {
-    fetch("http://localhost:4206/user/{email}", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + document.cookie.split("=")[1],
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        return data;
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch("http://localhost:4206/user/" + email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
       });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      throw error;
+    }
   };
 
   const handleSubmit = (e) => {
@@ -35,7 +37,6 @@ const Registration = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         firstName: firstName,
@@ -49,7 +50,7 @@ const Registration = () => {
         localStorage.setItem("token", token);
         setIsPending(false);
         if (res.status === 200) {
-          const user = getUserInfo();
+          const user = await getUserInfo();
           localStorage.setItem("user", JSON.stringify(user));
           setError(null);
           window.location.href = "/";

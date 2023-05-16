@@ -51,6 +51,10 @@ const ProductCard = ({ cardContent }) => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        marginTop: 2,
+        marginBottom: 2,
+        borderRadius: 2,
+        boxShadow: 1,
       }}
       maxWidth="lg"
       className="product-container"
