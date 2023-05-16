@@ -10,6 +10,23 @@ const Login = () => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
 
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch("http://localhost:4206/user/" + email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -19,27 +36,32 @@ const Login = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + document.cookie.split("=")[1],
       },
       body: JSON.stringify({
         email: email,
         password: password,
       }),
     })
-      .then((res) => {
-        res.json()
+      .then(async (res) => {
+        const token = await res.json();
+        localStorage.setItem("token", token);
         setIsPending(false);
         if (res.status === 200) {
+          const user = await getUserInfo();
+          localStorage.setItem("user", JSON.stringify(user));
           setError(null);
-          window.location.replace("/");
+          window.location.href = "/";
         } else {
-          res.status === 401 ? setError("Identifiants incorrects") : setError("Une erreur est survenue");
+          res.status === 401
+            ? setError("Identifiants incorrects")
+            : setError("Une erreur est survenue");
         }
       })
       .catch((err) => {
         setIsPending(false);
         setError(err.message);
-      }
-      );
+      });
   };
 
   return (
@@ -77,15 +99,14 @@ const Login = () => {
                 />
               </label>
               <a href="#">Mot de passe oublié ?</a>
-              {!isPending && (
-                <button onClick={handleSubmit}>Valider</button>
-              )}
+              {!isPending && <button onClick={handleSubmit}>Valider</button>}
               {isPending && <button disabled>Connexion...</button>}
               {error && (
                 <div>
                   <br />
-                  <Typography color="error" variant="body3"
-                  >{error}</Typography>
+                  <Typography color="error" variant="body3">
+                    {error}
+                  </Typography>
                 </div>
               )}
             </form>

@@ -11,6 +11,10 @@ const { processOrder } = require("./helpers/order");
 const { getTotalMoneyMadeByOrders } = require("./helpers/order");
 const { getTotalProductsSold } = require("./helpers/order");
 const { getTotalMoneyToMake } = require("./helpers/product");
+const { authenticateToken } = require("./helpers/auth");
+const { getAllProducts } = require("./helpers/product");
+const { getUserInfoByEmail } = require("./helpers/user");
+const { getOrdersByUserId } = require("./helpers/order");
 
 const app = express();
 const cors = require("cors");
@@ -41,15 +45,19 @@ app.post("/updateuser", (req, res) => {
   updateUser(req, res, connection);
 });
 
+app.get("/products", (req, res) => {
+  getAllProducts(req, res, connection);
+});
+
 app.get("/product/:id", (req, res) => {
   getProductById(req, res, connection);
 });
 
-app.get("/product-quantity/:id", (req, res) => {
+app.get("/product-quantity/:id", authenticateToken, (req, res) => {
   getQuantityById(req, res, connection);
 });
 
-app.get("/process-order/:idUser/:idProduct", (req, res) => {
+app.get("/process-order/:idUser/:idProduct", authenticateToken, (req, res) => {
   processOrder(req, res, connection);
 });
 
@@ -63,4 +71,12 @@ app.get("/statistics/products-sold", (req, res) => {
 
 app.get("/statistics/money-to-make", (req, res) => {
   getTotalMoneyToMake(req, res, connection);
+});
+
+app.get("/user/:email", (req, res) => {
+  getUserInfoByEmail(req, res, connection);
+});
+
+app.get("/orders/:idUser", authenticateToken, (req, res) => {
+  getOrdersByUserId(req, res, connection);
 });

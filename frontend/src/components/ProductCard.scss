@@ -1,51 +1,88 @@
 * {
-    transition:.25s ease-in-out;
-  }
-  
-  .card-wrap {
-    font-family:helvetica neue, helvetica, arial, sans-serif;
-    font-weight:200;
-    font-size:25px;
-    height:75px;
-    width:200px;
-    margin:50px auto;
-    position:relative;
-    &:hover {
-      .card {
-        &:nth-of-type(1){
-          transform:translate(-2px,-2px);
-        }
-        &:nth-of-type(2){
-          transform:translate(2px,2px);
-        }
-      }
-    }
+  transition: 0.25s ease-in-out;
+}
+
+.card-wrap {
+  font-family: helvetica neue, helvetica, arial, sans-serif;
+  font-weight: 200;
+  font-size: 25px;
+  height: 180px;
+  width: 200px;
+  margin: 50px auto;
+  position: relative;
+  &:hover {
     .card {
-      height:100%;
-      width:100%;
-      line-height:75px;
-      text-align:center;
-      position:absolute;
-      box-shadow: 2px 2px 2px rgba(0,0,0,.2);
-      border-radius:3px;
-      &:hover {
-        cursor:pointer;
-      }
-      &.front-card {
-        background:#e4e4e4;
-        color:#000;
-      }
-      &.back-card {
-        background:#d1d1d1;
-        color:#887d40;
-      }
-      &:first-of-type {
-        z-index:4;
+      &:nth-of-type(1) {
+        transform: translate(-2px, -2px);
       }
       &:nth-of-type(2) {
-        z-index:3;
-        left:5px;
-        top:5px;
+        transform: translate(2px, 2px);
       }
     }
   }
+  .card {
+    height: 100%;
+    width: 100%;
+    line-height: 75px;
+    text-align: center;
+    position: absolute;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    &:hover {
+      cursor: pointer;
+    }
+    &.front-card {
+      background: #fffefe;
+      color: #000;
+    }
+    &.back-card {
+      background: #d1d1d1;
+      color: #887d40;
+    }
+    &:first-of-type {
+      z-index: 4;
+    }
+    &:nth-of-type(2) {
+      z-index: 3;
+      left: 5px;
+      top: 5px;
+    }
+  }
+}
+
+.image-container {
+  /* Maintain the image's aspect ratio */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image {
+  /* Make the image fit without cutting any part */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-container {
+  margin: 0;
+  padding: 0;
+  border : 1px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+.product-info {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}

@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
-
+const { generateAccessToken } = require("./auth");
 
 /**
  * Gets the form data, checks if it matches the database and sends the result
@@ -19,7 +19,8 @@ const signIn = (req, res, connection) => {
       res.status(500).json({ message: "Erreur lors de la connexion" });
     } else {
       if (result.length > 0) {
-        res.status(200).json({ message: "Connexion réussie" });
+        const token = generateAccessToken({ result });
+        res.status(200).json(token);
       } else {
         res.status(401).json({ message: "Identifiants incorrects" });
       }
@@ -45,6 +46,7 @@ const signUp = (req, res, connection) => {
       console.log(err);
       res.status(500).json({ message: "Erreur lors de l'inscription" });
     } else {
+      const token = generateAccessToken({ result });
       res.status(200).json({ message: "Inscription réussie" });
     }
   });
@@ -91,9 +93,24 @@ const updateUser = (req, res, connection) => {
   });
 };
 
+const getUserInfoByEmail = (req, res, connection) => {
+  const { email } = req.params;
+  const sql = "SELECT * FROM user WHERE emailUser = ?";
+  const values = [email];
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ message: "Erreur lors de la récupération des informations" });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+};
+
 module.exports = {
   signIn,
   signUp,
   deleteUser,
   updateUser,
+  getUserInfoByEmail,
 };

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -11,14 +12,25 @@ import OrderHistory from "./pages/OrderHistory";
 import NoPage from "./pages/NoPage";
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
   return (
     <div className="App">
       <Router>
-        <Layout />
+        <Layout isLoggedIn={isLoggedIn} />
         <Routes>
           <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/register" element={<Registration setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product-info" element={<ProductInfo />} />
           <Route path="/order-info" element={<OrderInfo />} />
@@ -26,11 +38,6 @@ const App = () => {
           <Route path="*" element={<NoPage />} />
         </Routes>
       </Router>
-      {/* <div className="ocean">
-        <div className="wave wave1"></div>
-        <div className="wave wave2"></div>
-        <div className="wave wave3"></div>
-      </div> */}
     </div>
   );
 };

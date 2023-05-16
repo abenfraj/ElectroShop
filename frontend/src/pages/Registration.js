@@ -12,6 +12,20 @@ const Registration = () => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
 
+  const getUserInfo = () => {
+    fetch("http://localhost:4206/user/{email}", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + document.cookie.split("=")[1],
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -21,6 +35,7 @@ const Registration = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         firstName: firstName,
@@ -29,12 +44,15 @@ const Registration = () => {
         password: password,
       }),
     })
-      .then((res) => {
-        res.json();
+      .then(async (res) => {
+        const token = await res.json();
+        localStorage.setItem("token", token);
         setIsPending(false);
         if (res.status === 200) {
+          const user = getUserInfo();
+          localStorage.setItem("user", JSON.stringify(user));
           setError(null);
-          window.location.replace("/");
+          window.location.href = "/";
         } else {
           res.status === 401
             ? setError("Identifiants incorrects")
@@ -63,7 +81,7 @@ const Registration = () => {
           <div className="form-container sign-in-container">
             <form action="#">
               <h1>Inscription</h1>
-              <br/>
+              <br />
               <label>
                 <input
                   type="text"
