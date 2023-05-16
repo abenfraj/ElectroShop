@@ -36,7 +36,7 @@ const Login = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + document.cookie.split("=")[1],
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         email: email,

@@ -20,7 +20,7 @@ const ProductCard = ({ cardContent }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + document.cookie.split("=")[1],
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }
     )
@@ -33,8 +33,6 @@ const ProductCard = ({ cardContent }) => {
           alert(
             "Erreur lors de l'achat du produit, le produit n'est peut-être plus disponible"
           );
-        } else if (res.status === 403){
-          window.location.href = "/login";
         } else {
           alert("Achat effectué avec succès");
         }
